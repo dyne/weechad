@@ -25,7 +25,7 @@
 Quick start:
 
 ```
-curl -Ls dyne.org/weechad | bash
+curl -Ls dyne.org/weechad/setup | bash
 ```
 
 Will create a new WeeChat configuration in ~/.weechad
