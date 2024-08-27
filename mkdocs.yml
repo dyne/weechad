@@ -1,0 +1,23 @@
+site_name: WeeChad
+site_url: https://dyne.org/weechad
+
+theme:
+  name: material
+  logo: images/dyneorg.svg
+  favicon: images/favicon.svg
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - DarkFI: https://dark.fi
+  - DarkIRC: https://news.dyne.org/howto_darkfi_1-connect_to_darkirc/
+  - Libera: https://libera.chat/
+  - Tomb: https://dyne.org/tomb
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
