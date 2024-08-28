@@ -194,14 +194,19 @@ pyscript collapse_channel.py
 plscript highmon.pl
 err "and I'm running WeeChat first run (you'll see the terminal blink)"
 WEECHAT_HOME="$H" \
-weechat -a -r "$nick_conf" -r "$theme_conf" -r "$script_conf" -r "$server_conf" -r "/save;/quit;"
+weechat -a \
+  -r "$nick_conf" \
+  -r "$theme_conf" \
+  -r "$script_conf" \
+  -r "$server_conf"  \
+  -r "/save;/quit;"
 chmod -R go-rwx ~/.weechad
 err "Setup completed! Now copy ./weechad in your PATH"
 
 err "at last I'm generating your startup script in ~/weechad"
 cat <<EOF > ~/weechad
 #!/bin/sh
-WEECHAT_HOME=$HOME/.weechad weechat
+WEECHAT_HOME=\$HOME/.weechad weechat
 EOF
 chmod +x ~/weechad
 err "Done! enjoy being a Chad 🗿"
