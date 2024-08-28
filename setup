@@ -182,6 +182,7 @@ plscript highmon.pl
 err "and I'm running WeeChat first run (you'll see the terminal blink)"
 WEECHAT_HOME="$H" \
 weechat -a -r "$theme_conf" -r "$script_conf" -r "$server_conf" -r "/save;/quit;"
+chmod -R go-rwx ~/.weechat
 err "Setup completed! Now copy ./weechad in your PATH"
 
 err "at last I'm generating your startup script in ~/weechad"
