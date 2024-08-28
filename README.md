@@ -43,7 +43,7 @@ To increase privacy put the `~/.weechad` conf in a [Tomb](https://dyne.org/tomb)
 
 For context, some useful links in the sidebar.
 
-# Contribute! [help improve the base conf](https://github.com/dyne/weechat).
+# Contribute! [help improve the base conf](https://github.com/dyne/weechad).
 
 Main reason for this is that script is that WeeChat discourages direct editing of its configuration files as as well deploying them via dotfiles: settings should be set at runtime, which gives feedback on deprecation and errors. This script does that, plus set everything up in a self-contained directory which is easy to protect, for instance using encrypted folders.
 
