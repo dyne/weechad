@@ -70,8 +70,12 @@ echo ${wcver} | grep 4.4.. >/dev/null || {
 
 # running in terminal or through a pipe?
 if [ -t 0 ]; then
-  err "Chose a nickname?"
-  read nick
+  if [ "$NICK" = "" ]; then
+    err "Chose a nickname?"
+    read nick
+  else
+    nick="$NICK"
+  fi
 else
   if [ "$NICK" = "" ]; then
     err "Nickname undefined! Run setup locally or define your NICK:"
