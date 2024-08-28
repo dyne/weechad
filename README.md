@@ -45,7 +45,12 @@ For context, some useful links in the sidebar.
 
 # Contribute! [help improve the base conf](https://github.com/dyne/weechad).
 
-Main reason for this is that script is that WeeChat discourages direct editing of its configuration files as as well deploying them via dotfiles: settings should be set at runtime, which gives feedback on deprecation and errors. This script does that, plus set everything up in a self-contained directory which is easy to protect, for instance using encrypted folders.
+WeeChat discourages direct editing of its configuration files and
+deploying them via dotfiles. Instead, settings should be configured at
+runtime, which provides immediate feedback on any deprecations or
+errors. This script facilitates that process by setting up everything
+in a self-contained directory, making it easier to secure, for
+example, by using encrypted folders.
 
 -----
 <div style="font-size:0.7em;">
