@@ -9,6 +9,14 @@ theme:
 extra_css:
   - stylesheets/extra.css
 
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/mastodon
+      link: https://toot.community/@dyne
+    - icon: fontawesome/brands/github
+      link: https://github.com/dyne/weechad
+
 nav:
   - WeeChat: https://weechat.org
   - DarkIRC: https://news.dyne.org/howto_darkfi_1-connect_to_darkirc/
