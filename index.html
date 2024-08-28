@@ -65,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#weechad" class="md-skip">
+        <a href="#chads-have-no-time-for-weechat-confs" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              WeeChad
+              Chads have no time for WeeChat confs.
             
           </span>
         </div>
@@ -188,11 +188,11 @@
   
   
     <li class="md-nav__item">
-      <a href="https://dark.fi" class="md-nav__link">
+      <a href="https://weechat.org" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    DarkFI
+    WeeChat
   </span>
   
 
@@ -245,11 +245,49 @@
   
   
     <li class="md-nav__item">
+      <a href="https://dark.fi" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DarkFI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
       <a href="https://dyne.org/tomb" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     Tomb
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://dyne.org" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dyne.org
   </span>
   
 
@@ -291,7 +329,7 @@
                   
 
 
-<h1 id="weechad">WeeChad</h1>
+<h1 id="chads-have-no-time-for-weechat-confs">Chads have no time for WeeChat confs.</h1>
 <div class="highlight"><pre><span></span><code>⢠⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⢧⠉⠓⠲⠤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠈⢇⠀⠀⠀⠀⠉⠑⠒⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -313,10 +351,53 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡓⠐⠋⠐⠊⠀⠀⠀⠀⠀⠀
 </code></pre></div>
 <p>Quick start:</p>
+<p>Install <a href="https://weechat.org">WeeChat</a> latest (version &gt;4.4)</p>
 <div class="highlight"><pre><span></span><code>curl -Ls dyne.org/weechad/setup | bash
 </code></pre></div>
-<p>Will create a new WeeChat configuration in ~/.weechad</p>
-<p>Start it with: ~/weechad and if you like copy it by hand into /usr/local/bin</p>
+<p>Will create the <code>~/weechad</code> script and a new conf in <code>~/.weechad</code></p>
+<p>If you like copy the script by hand into <code>/usr/local/bin/weechad</code></p>
+<p>Comes pre-configured with <a href="https://news.dyne.org/howto_darkfi_1-connect_to_darkirc/">DarkIRC</a> (needs daemon running) and <a href="https://libera.chat">Libera</a>, just:
+<div class="highlight"><pre><span></span><code>/connect darkirc
+/connect libera
+</code></pre></div></p>
+<p>To increase privacy put the <code>~/.weechad</code> conf in a <a href="https://dyne.org/tomb">Tomb</a> and use <a href="https://dyne.org/docs/tomb/manpage/#hooks">bind-hooks</a>.</p>
+<p>For context, some useful links in the sidebar.</p>
+<h1 id="contribute-help-improve-the-base-conf">Contribute! <a href="https://github.com/dyne/weechat">help improve the base conf</a>.</h1>
+<hr />
+<div style="font-size:0.7em;">
+<p>WeeChad is maintained by <a href="https://github.com/dyne/Jaromil">jaromil</a>.</p>
+
+<p>
+This is free and unencumbered software released into the public domain.
+</p>
+<p>
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+</p>
+<p>
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+</p>
+<p>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+</p>
+<p>
+For more information, please refer to <a href="https://unlicense.org">unlicense.org</a>.
+</p>
+</div>
 
 
 
