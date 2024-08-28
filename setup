@@ -91,7 +91,8 @@ err "OK $nick! I'm generating your configuration in ~/.weechad"
 # THEME
 theme_conf=""
 while IFS= read -r line; do
-  [ "$line" = "" ] && continue
+  [ "$line"      = ""  ] && continue
+  [ "${line:0:1}" = "#" ] && continue
   theme_conf="$theme_conf;`printf '%s' "$line"`"
 done <<EOF
 # requires: 256 color terminal
@@ -139,7 +140,8 @@ EOF
 
 script_conf=""
 while IFS= read -r line; do
-  [ "$line" = "" ] && continue
+  [ "$line"      = ""  ] && continue
+  [ "${line:0:1}" = "#" ] && continue
   script_conf="$script_conf;`printf '%s' "$line"`"
 done <<EOF
 /autosort helpers set monitors_buffers_first ${if:${buffer.full_name}!~^core\.(chan|high|news)mon$}
@@ -157,9 +159,11 @@ EOF
 
 server_conf=""
 while IFS= read -r line; do
-  [ "$line" = "" ] && continue
+  [ "$line"      = ""  ] && continue
+  [ "${line:0:1}" = "#" ] && continue
   server_conf="$server_conf;`printf '%s' "$line"`"
 done <<EOF
+# default servers
 /server add darkirc localhost/6667 -notls -autoconnect
 /server add libera localhost/6697 -tls -autoconnect
 EOF
