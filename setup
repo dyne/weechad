@@ -55,14 +55,14 @@ logo
   exit 1
 }
 
-command -v weechat || {
+command -v weechat >/dev/null || {
   err "WeeChat not installed."
   exit 1
 }
 
 # TODO: better version checking
 wcver=`weechat -v`
-echo ${wcver} | grep 4.4..  || {
+echo ${wcver} | grep 4.4.. >/dev/null || {
   err "WeeChat installed is old: ${wcver}"
   err "Install from: https://weechat.org/download/weechat/stable"
   exit 1
