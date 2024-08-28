@@ -10,10 +10,12 @@ extra_css:
   - stylesheets/extra.css
 
 nav:
-  - DarkFI: https://dark.fi
+  - WeeChat: https://weechat.org
   - DarkIRC: https://news.dyne.org/howto_darkfi_1-connect_to_darkirc/
   - Libera: https://libera.chat/
+  - DarkFI: https://dark.fi
   - Tomb: https://dyne.org/tomb
+  - Dyne.org: https://dyne.org
 
 markdown_extensions:
   - attr_list
@@ -21,3 +23,9 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+
+plugins:
+  - social
+  - privacy
+  - search:
+      enabled: false
