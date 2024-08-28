@@ -26,7 +26,7 @@ Quick start:
 Install [WeeChat](https://weechat.org) latest (version >4.4)
 
 ```
-curl -Ls dyne.org/weechad/setup | bash
+curl -Ls dyne.org/weechad/setup | NICK=yournick bash
 ```
 
 Will create the `~/weechad` script and a new conf in `~/.weechad`
