@@ -1,9 +1,10 @@
 site_name: WeeChad
 site_url: https://dyne.org/weechad
+site_description: curl -Ls dyne.org/weechad/setup | NICK=yournick bash
 
 theme:
   name: material
-  logo: images/dyneorg.svg
+  logo: images/weechad_ascii_logo.png
   favicon: images/favicon.svg
 
 extra_css:
