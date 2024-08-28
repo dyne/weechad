@@ -68,8 +68,19 @@ echo ${wcver} | grep 4.4..  || {
   exit 1
 }
 
-err "Chose a nickname?"
-read nick
+# running in terminal or through a pipe?
+if [ -t 0 ]; then
+  err "Chose a nickname?"
+  read nick
+else
+  if [ "$NICK" = "" ]; then
+    err "Nickname undefined! Run setup locally or define your NICK:"
+    err "curl -Ls dyne.org/weechad/setup | NICK=yournick bash"
+    exit 1
+  else
+    nick="$NICK"
+  fi
+fi
 nick_conf="/set irc.server_default.nicks \"${nick},${nick}_,${nick}__,${nick}__\""
 err "OK $nick! I'm generating your configuration in ~/.weechad"
 
@@ -182,7 +193,7 @@ plscript highmon.pl
 err "and I'm running WeeChat first run (you'll see the terminal blink)"
 WEECHAT_HOME="$H" \
 weechat -a -r "$theme_conf" -r "$script_conf" -r "$server_conf" -r "/save;/quit;"
-chmod -R go-rwx ~/.weechat
+chmod -R go-rwx ~/.weechad
 err "Setup completed! Now copy ./weechad in your PATH"
 
 err "at last I'm generating your startup script in ~/weechad"
