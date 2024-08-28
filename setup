@@ -86,7 +86,10 @@ err "OK $nick! I'm generating your configuration in ~/.weechad"
 
 # THEME
 theme_conf=""
-grep -v '^#' <<EOF |
+while IFS= read -r line; do
+  [ "$line" = "" ] && continue
+  theme_conf="$theme_conf;`printf '%s' "$line"`"
+done <<EOF
 # requires: 256 color terminal
 /set weechat.look.buffer_notify_default message
 /set weechat.look.color_nick_offline on
@@ -129,13 +132,12 @@ grep -v '^#' <<EOF |
 /trigger add nick modifier weechat_print "${tg_tags} =~ irc_nick" ";is now known as;${color:darkgray}is now known as;" ""
 /trigger add disconnect modifier "weechat_print" "${tg_tags} !~ . && ${tg_buffer} !~ irc.server." ";irc: disconnected from server;${color:red}irc: disconnected from server;" ""
 EOF
-while read line; do
-  [ "$line" = "" ] && continue
-	theme_conf="$theme_conf;`printf '%s' "$line"`"
-done
 
 script_conf=""
-grep -v '^#' <<EOF |
+while IFS= read -r line; do
+  [ "$line" = "" ] && continue
+  script_conf="$script_conf;`printf '%s' "$line"`"
+done <<EOF
 /autosort helpers set monitors_buffers_first ${if:${buffer.full_name}!~^core\.(chan|high|news)mon$}
 /autosort rules insert 3 ${monitors_buffers_first}
 /set plugins.var.python.cmd_help.color_delimiters "*white"
@@ -148,22 +150,15 @@ grep -v '^#' <<EOF |
 /bar add highmon root top auto 0 4
 # /set weechat.bar.highmon.bar_lines 4
 EOF
-while read line
-do
-  [ "$line" = "" ] && continue
-  script_conf="$script_conf;`printf '%s' "$line"`"
-done
 
 server_conf=""
-grep -v '^#' <<EOF |
-/server add darkirc localhost/6667 -notls
-/server add libera localhost/6697 -tls
-EOF
-while read line
-do
+while IFS= read -r line; do
   [ "$line" = "" ] && continue
   server_conf="$server_conf;`printf '%s' "$line"`"
-done
+done <<EOF
+/server add darkirc localhost/6667 -notls -autoconnect
+/server add libera localhost/6697 -tls -autoconnect
+EOF
 
 pyscript() {
   mkdir -p $H/python $H/python/autoload
@@ -189,10 +184,9 @@ pyscript go.py
 pyscript collapse_channel.py
 
 plscript highmon.pl
-
 err "and I'm running WeeChat first run (you'll see the terminal blink)"
 WEECHAT_HOME="$H" \
-weechat -a -r "$theme_conf" -r "$script_conf" -r "$server_conf" -r "/save;/quit;"
+weechat -a -r "$nick_conf" -r "$theme_conf" -r "$script_conf" -r "$server_conf" -r "/save;/quit;"
 chmod -R go-rwx ~/.weechad
 err "Setup completed! Now copy ./weechad in your PATH"
 
