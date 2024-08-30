@@ -3,6 +3,83 @@
 # WeeChat configurator for Chads
 H=${HOME}/.weechad
 
+main() {
+  logo
+
+
+  if [ "$INSTALL" ]; then
+    err "Install function selected: $INSTALL"
+    install-something "$INSTALL" || {
+      err "Install error in: $INSTALL"
+      exit 1
+    }
+    exit 0
+  fi
+
+  ############
+  # SETUP MAIN
+  [ -d $H ] && {
+    err "Cannot overwrite: $H"
+    err "If you are really sure, delete and run again."
+    exit 1
+  }
+
+  command -v weechat >/dev/null || {
+    err "WeeChat not installed."
+    exit 1
+  }
+
+  # TODO: better version checking
+  wcver=`weechat -v`
+  echo ${wcver} | grep 4.4.. >/dev/null || {
+    err "WeeChat installed is old: ${wcver}"
+    err "Install from: https://weechat.org/download/weechat/stable"
+    exit 1
+  }
+
+  setup-nick-conf
+  mkdir -p $H
+
+  err "preparing for 1st run setup"
+  setup-theme-conf
+  setup-script-conf
+  setup-server-conf
+
+  err "downloading some WeeChat plugins..."
+  pyscript autosort.py
+  pyscript grep.py
+  pyscript cmd_help.py
+  pyscript colorize_nicks.py
+  pyscript go.py
+  pyscript collapse_channel.py
+  plscript highmon.pl
+  err "...done with plugins."
+  err "launching WeeChat for setup (you'll see the terminal blink)"
+  WEECHAT_HOME="$H" \
+              weechat -a \
+              -r "$nick_conf" \
+              -r "$theme_conf" \
+              -r "$script_conf" \
+              -r "$server_conf"  \
+              -r "/save;/quit;"
+  chmod -R go-rwx ~/.weechad
+  err "Setup completed! Now copy ./weechad in your PATH"
+
+  err "at last I'm generating your startup script in ~/weechad"
+  cat <<EOF > ~/weechad
+#!/bin/sh
+WEECHAT_HOME=\$HOME/.weechad weechat
+EOF
+  chmod +x ~/weechad
+  err "Done! enjoy being a Chad 🗿"
+  err "Additional install modules available:"
+  err "INSTALL=tomb    setup  # encrypts all ~/.weechad data in a tomb"
+  err "INSTALL=darkirc setup  # builds a local darkirc node for P2P IRC"
+
+  ## END OF MAIN
+  ##############
+}
+
 logo() {
   cat <<EOF
 ⣦⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -46,55 +123,37 @@ logo() {
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⡇⠀⣰⣿⣏⣀⣤⠴⠖⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 EOF
 }
-err() { >&2 echo "🗿 $*"; }
+err() { >&2 printf "🗿 $*\n"; }
 
-logo
-[ -d $H ] && {
-  err "Cannot overwrite: $H"
-  err "If you are really sure, delete and run again."
-  exit 1
-}
-
-command -v weechat >/dev/null || {
-  err "WeeChat not installed."
-  exit 1
-}
-
-# TODO: better version checking
-wcver=`weechat -v`
-echo ${wcver} | grep 4.4.. >/dev/null || {
-  err "WeeChat installed is old: ${wcver}"
-  err "Install from: https://weechat.org/download/weechat/stable"
-  exit 1
-}
-
-# running in terminal or through a pipe?
-if [ -t 0 ]; then
-  if [ "$NICK" = "" ]; then
-    err "Chose a nickname?"
-    read nick
+setup-nick-conf() {
+  # running in terminal or through a pipe?
+  if [ -t 0 ]; then
+    if [ "$NICK" = "" ]; then
+      err "Chose a nickname?"
+      read nick
+    else
+      nick="$NICK"
+    fi
   else
-    nick="$NICK"
+    if [ "$NICK" = "" ]; then
+      err "Nickname undefined! Run setup locally or define your NICK:"
+      err "curl -Ls dyne.org/weechad/setup | NICK=yournick bash"
+      exit 1
+    else
+      nick="$NICK"
+    fi
   fi
-else
-  if [ "$NICK" = "" ]; then
-    err "Nickname undefined! Run setup locally or define your NICK:"
-    err "curl -Ls dyne.org/weechad/setup | NICK=yournick bash"
-    exit 1
-  else
-    nick="$NICK"
-  fi
-fi
-nick_conf="/set irc.server_default.nicks \"${nick},${nick}_,${nick}__,${nick}__\""
-err "OK $nick! I'm generating your configuration in ~/.weechad"
+  nick_conf="/set irc.server_default.nicks \"${nick},${nick}_,${nick}__,${nick}__\""
+  err "OK $nick! I'm generating your configuration in ~/.weechad"
+}
 
-# THEME
-theme_conf=""
-while IFS= read -r line; do
-  [ "$line"      = ""  ] && continue
-  [ "${line:0:1}" = "#" ] && continue
-  theme_conf="$theme_conf;`printf '%s' "$line"`"
-done <<EOF
+setup-theme-conf() {
+  # THEME
+  while IFS= read -r line; do
+    [ "$line"      = ""  ] && continue
+    [ "${line:0:1}" = "#" ] && continue
+    theme_conf="$theme_conf;`printf '%s' "$line"`"
+  done <<EOF
 # requires: 256 color terminal
 /set weechat.look.buffer_notify_default message
 /set weechat.look.color_nick_offline on
@@ -137,13 +196,15 @@ done <<EOF
 /trigger add nick modifier weechat_print "${tg_tags} =~ irc_nick" ";is now known as;${color:darkgray}is now known as;" ""
 /trigger add disconnect modifier "weechat_print" "${tg_tags} !~ . && ${tg_buffer} !~ irc.server." ";irc: disconnected from server;${color:red}irc: disconnected from server;" ""
 EOF
+}
 
-script_conf=""
-while IFS= read -r line; do
-  [ "$line"      = ""  ] && continue
-  [ "${line:0:1}" = "#" ] && continue
-  script_conf="$script_conf;`printf '%s' "$line"`"
-done <<EOF
+setup-script-conf() {
+  script_conf=""
+  while IFS= read -r line; do
+    [ "$line"      = ""  ] && continue
+    [ "${line:0:1}" = "#" ] && continue
+    script_conf="$script_conf;`printf '%s' "$line"`"
+  done <<EOF
 /autosort helpers set monitors_buffers_first ${if:${buffer.full_name}!~^core\.(chan|high|news)mon$}
 /autosort rules insert 3 ${monitors_buffers_first}
 /set plugins.var.python.cmd_help.color_delimiters "*white"
@@ -156,57 +217,109 @@ done <<EOF
 /bar add highmon root top auto 0 4
 # /set weechat.bar.highmon.bar_lines 4
 EOF
+}
 
-server_conf=""
-while IFS= read -r line; do
-  [ "$line"      = ""  ] && continue
-  [ "${line:0:1}" = "#" ] && continue
-  server_conf="$server_conf;`printf '%s' "$line"`"
-done <<EOF
+setup-server-conf() {
+  server_conf=""
+  while IFS= read -r line; do
+    [ "$line"      = ""  ] && continue
+    [ "${line:0:1}" = "#" ] && continue
+    server_conf="$server_conf;`printf '%s' "$line"`"
+  done <<EOF
 # default servers
 /server add darkirc localhost/6667 -notls -autoconnect
 /server add libera localhost/6697 -tls -autoconnect
 EOF
+}
 
 pyscript() {
+  printf " %s" "$1"
   mkdir -p $H/python $H/python/autoload
   curl -Ls https://weechat.org/files/scripts/${1} > $H/python/${1}
   ln -s $H/python/${1} $H/python/autoload/${1}
   #scripts="$scripts;/script load ${1};/script autoload ${1}"
 }
 plscript() {
+  printf " %s" "$1"
   mkdir -p $H/perl $H/perl/autoload
   curl -Ls https://weechat.org/files/scripts/${1} > $H/perl/${1}
   ln -sf $H/perl/${1} $H/perl/autoload/${1}
   #scripts="$scripts;/script load ${1};/script autoload ${1}"
 }
 
-mkdir -p $H
-
-err "now I'm downloading some WeeChat plugins..."
-pyscript autosort.py
-pyscript grep.py
-pyscript cmd_help.py
-pyscript colorize_nicks.py
-pyscript go.py
-pyscript collapse_channel.py
-
-plscript highmon.pl
-err "and I'm running WeeChat first run (you'll see the terminal blink)"
-WEECHAT_HOME="$H" \
-weechat -a \
-  -r "$nick_conf" \
-  -r "$theme_conf" \
-  -r "$script_conf" \
-  -r "$server_conf"  \
-  -r "/save;/quit;"
-chmod -R go-rwx ~/.weechad
-err "Setup completed! Now copy ./weechad in your PATH"
-
-err "at last I'm generating your startup script in ~/weechad"
-cat <<EOF > ~/weechad
-#!/bin/sh
-WEECHAT_HOME=\$HOME/.weechad weechat
+askpass() {
+  command -v pinentry-tty >/dev/null || {
+    err "Cannot install tomb: missing pinentry-tty"
+    return 1; }
+  local p1
+  local p2
+  cat <<EOF | pinentry-tty | read -r p1
+OPTION ttyname=$TTY
+OPTION lc-ctype=$LANG
+SETTITLE Set encryption password
+SETDESC Chose the password to protect your WeeChad setup
+SETPROMPT Password:
+GETPIN
 EOF
-chmod +x ~/weechad
-err "Done! enjoy being a Chad 🗿"
+  cat <<EOF | pinentry-tty | read -r p1
+OPTION ttyname=$TTY
+OPTION lc-ctype=$LANG
+SETTITLE Type again encryption password
+SETDESC Confirm that you did not mistype the password
+SETPROMPT Password:
+GETPIN
+EOF
+  [ "$p1" = "p2" ] || {
+    p1="000000000000000000000000000000000"
+    p2="000000000000000000000000000000000"
+    err "Password mismatch, perhaps a typo?"
+    return 1
+  }
+  printf "%s" "$p1"
+  p1="000000000000000000000000000000000"
+  p2="000000000000000000000000000000000"
+  return 0
+}
+
+install-something() {
+  case "$1" in
+    weechat)
+    ;;
+    darkfi)
+    ;;
+    tomb)
+      [ -d "$H" ] || {
+        err "Setup weechad first, then install it in a tomb."
+        exit 1; }
+      local tombver=2.11
+      local tomb=""
+      while true; do # install tomb if missing
+        [ -x /usr/bin/tomb ] && { tomb="/usr/bin/tomb"; break; }
+        [ -x /usr/local/bin/tomb ] && { tomb="/usr/local/bin/tomb"; break; }
+	      err "install Tomb from latest source"
+        ttmp=`mktemp`
+		    curl -Ls https://files.dyne.org/tomb/Tomb-${tombver}.tar.gz \
+             > /tmp/"$ttmp".tar.gz
+        tar xf /tmp/"$ttmp".tar.gz -O "Tomb-${tombver}/tomb" > "$HOME/tomb"
+        tomb="$HOME/tomb"
+        break
+      done
+      set -e
+      local pp=`askpass`
+      $tomb dig -s 64   $HOME/weechad.tomb
+      $tomb forge -f -k --tomb-pwd "$pp" --unsafe $pp $HOME/weechad.tomb.key
+      $tomb lock -f -k --tomb-pwd "$pp" --unsafe $pp $HOME/weechad.tomb.key $HOME/weechad.tomb
+      $tomb open -f -k --tomb-pwd "$pp" --unsafe $pp $HOME/weechad.tomb.key $HOME/weechad.tomb
+      mv $H /media/weechad/weechad
+      printf "weechad .weechad\n" > /media/weechad/.bind-hooks
+      $tomb close weechad
+      set +e
+      err "Tomb setup complete! now you can:"
+      err "$tomb open -k \$HOME/weechad.tomb.key \$HOME/weechad.tomb"
+      err "To improve privacy remove the key from this machine!"
+      err "For more information see https://dyne.org/docs/tomb"
+    ;;
+  esac
+}
+
+main
