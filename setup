@@ -248,32 +248,19 @@ plscript() {
 }
 
 askpass() {
-  command -v pinentry-tty >/dev/null || {
-    err "Cannot install tomb: missing pinentry-tty"
-    return 1; }
   local p1
   local p2
-  cat <<EOF | pinentry-tty | read -r p1
-OPTION ttyname=$TTY
-OPTION lc-ctype=$LANG
-SETTITLE Set encryption password
-SETDESC Chose the password to protect your WeeChad setup
-SETPROMPT Password:
-GETPIN
-EOF
-  cat <<EOF | pinentry-tty | read -r p1
-OPTION ttyname=$TTY
-OPTION lc-ctype=$LANG
-SETTITLE Type again encryption password
-SETDESC Confirm that you did not mistype the password
-SETPROMPT Password:
-GETPIN
-EOF
-  [ "$p1" = "p2" ] || {
+  err "Set encryption password"
+  err "Chose the password to protect your WeeChad setup"
+  read -r -s -p "🗿 Type your password: " p1
+  >&2 printf "\n"
+  read -r -s -p "🗿 Type again to confirm: " p2
+  >&2 printf "\n"
+  [ "$p1" = "$p2" ] || {
     p1="000000000000000000000000000000000"
     p2="000000000000000000000000000000000"
     err "Password mismatch, perhaps a typo?"
-    return 1
+    exit 1
   }
   printf "%s" "$p1"
   p1="000000000000000000000000000000000"
@@ -291,6 +278,12 @@ install-something() {
       [ -d "$H" ] || {
         err "Setup weechad first, then install it in a tomb."
         exit 1; }
+      [ -r "$HOME/weechad.tomb" ] && {
+        err "Cannot overwrite existing tomb $HOME/weechat.tomb"
+        exit 1; }
+      [ -r "$HOME/weechad.tomb.key" ] && {
+        err "Cannot overwrite existing tomb key $HOME/weechat.tomb.key"
+        exit 1; }
       local tombver=2.11
       local tomb=""
       while true; do # install tomb if missing
@@ -307,11 +300,14 @@ install-something() {
       set -e
       local pp=`askpass`
       $tomb dig -s 64   $HOME/weechad.tomb
-      $tomb forge -f -k --tomb-pwd "$pp" --unsafe $pp $HOME/weechad.tomb.key
-      $tomb lock -f -k --tomb-pwd "$pp" --unsafe $pp $HOME/weechad.tomb.key $HOME/weechad.tomb
-      $tomb open -f -k --tomb-pwd "$pp" --unsafe $pp $HOME/weechad.tomb.key $HOME/weechad.tomb
-      mv $H /media/weechad/weechad
-      printf "weechad .weechad\n" > /media/weechad/.bind-hooks
+      $tomb forge --ignore-swap --unsafe \
+            --tomb-pwd "$pp" -k $HOME/weechad.tomb.key
+      $tomb lock --ignore-swap --unsafe \
+            --tomb-pwd "$pp" -k $HOME/weechad.tomb.key $HOME/weechad.tomb
+      $tomb open --ignore-swap --unsafe \
+            --tomb-pwd "$pp" -k $HOME/weechad.tomb.key $HOME/weechad.tomb
+      mv $H /media/weechad/weechad && mkdir -p $H
+      printf "weechad .weechad\n" > /media/weechad/bind-hooks
       $tomb close weechad
       set +e
       err "Tomb setup complete! now you can:"
