@@ -21,7 +21,19 @@
       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡓⠐⠋⠐⠊⠀⠀⠀⠀⠀⠀
 ```
 
-Quick start:
+
+Welcome to the world of WeeChad, the IRC client that flexes on all
+others with its supreme focus on privacy and ease of use. Imagine a
+software so alpha, it sets up in a single folder, can connect to
+[DarkIRC](https://dark.fi) and [encrypts its settings and
+logs](https://dyne.org/tomb) for maximum privacy. No more messing
+around with dotfiles like a beta; WeeChad configures everything at
+runtime, giving you instant feedback on any deprecations or errors.
+
+With WeeChad, you’re not just chatting; you’re dominating the IRC
+scene with the confidence of a meme lord.
+
+## Quick start
 
 Install [WeeChat](https://weechat.org) latest (version >4.4)
 
@@ -43,14 +55,33 @@ To increase privacy put the `~/.weechad` conf in a [Tomb](https://dyne.org/tomb)
 
 For context, some useful links in the sidebar.
 
-# Contribute! [help improve the base conf](https://github.com/dyne/weechad).
+## FAQ
+
+> What are the hardware requirements?
+
+When Greta Thunberg discovers this she'll be all over IRC. Weechad is very low resource and will not make you dependent on Russian gas. It even runs on a [RPI 0W](https://www.raspberrypi.com/products/raspberry-pi-zero-w/) or any similar gadget you can [hide taped into a toilet tank](https://www.pcgamer.com/this-pc-in-a-toilet-is-the-good-shit/).
+
+> How does one send images over this?
+
+IRC is built for ANSI text; [you can turn images into ANSI](https://lib.rs/crates/img2irc-rs). A weechat script for this would be awesome, BTW.
+
+> Which IRC network should I connect?
+
+DarkIRC is the best because it is decentralized and grants you unprecedented levels of privacy. Other networks run on central servers, but their communities may also be fun: have a look at [liberta casa](https://liberta.casa/) or [snoonet](https://snoonet.org/).
+
+> Where can one learn more about IRC?
+
+This [awesome list](https://github.com/davisonio/awesome-irc?tab=readme-ov-file#articles) provides a good start.
+
+> Wasn't WeeChat enough to be a Chad?
 
 WeeChat discourages direct editing of its configuration files and
 deploying them via dotfiles. Instead, settings should be configured at
 runtime, which provides immediate feedback on any deprecations or
-errors. This script facilitates that process by setting up everything
-in a self-contained directory, making it easier to secure, for
-example, by using encrypted folders.
+errors. Chads have no time to set the same configurations over and
+over again on a dozen shells per day.
+
+## Contribute! [help improve the base conf](https://github.com/dyne/weechad).
 
 -----
 <div style="font-size:0.7em;">

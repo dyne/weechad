@@ -1,5 +1,8 @@
 .PHONY: docs deps
 
+check:
+	shellcheck setup
+
 preview: deps
 	. bin/activate && mkdocs serve
 
