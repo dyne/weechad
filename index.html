@@ -350,6 +350,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick start
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      FAQ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contribute-help-improve-the-base-conf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contribute! help improve the base conf.
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -384,7 +419,16 @@
       ⠀⠀⠀⠀⠀⠉⠉⠉⠉⠁⠀⠀⠀⠙⡆⠀⢀⡴⠋⠀⡀⠀⠀⠰⠇
       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡓⠐⠋⠐⠊⠀⠀⠀⠀⠀⠀
 </code></pre></div>
-<p>Quick start:</p>
+<p>Welcome to the world of WeeChad, the IRC client that flexes on all
+others with its supreme focus on privacy and ease of use. Imagine a
+software so alpha, it sets up in a single folder, can connect to
+<a href="https://dark.fi">DarkIRC</a> and <a href="https://dyne.org/tomb">encrypts its settings and
+logs</a> for maximum privacy. No more messing
+around with dotfiles like a beta; WeeChad configures everything at
+runtime, giving you instant feedback on any deprecations or errors.</p>
+<p>With WeeChad, you’re not just chatting; you’re dominating the IRC
+scene with the confidence of a meme lord.</p>
+<h2 id="quick-start">Quick start</h2>
 <p>Install <a href="https://weechat.org">WeeChat</a> latest (version &gt;4.4)</p>
 <div class="highlight"><pre><span></span><code>curl -Ls dyne.org/weechad/setup | NICK=yournick bash
 </code></pre></div>
@@ -396,13 +440,32 @@
 </code></pre></div></p>
 <p>To increase privacy put the <code>~/.weechad</code> conf in a <a href="https://dyne.org/tomb">Tomb</a> and use <a href="https://dyne.org/docs/tomb/manpage/#hooks">bind-hooks</a>.</p>
 <p>For context, some useful links in the sidebar.</p>
-<h1 id="contribute-help-improve-the-base-conf">Contribute! <a href="https://github.com/dyne/weechad">help improve the base conf</a>.</h1>
+<h2 id="faq">FAQ</h2>
+<blockquote>
+<p>What are the hardware requirements?</p>
+</blockquote>
+<p>When Greta Thunberg discovers this she'll be all over IRC. Weechad is very low resource and will not make you dependent on Russian gas. It even runs on a <a href="https://www.raspberrypi.com/products/raspberry-pi-zero-w/">RPI 0W</a> or any similar gadget you can <a href="https://www.pcgamer.com/this-pc-in-a-toilet-is-the-good-shit/">hide taped into a toilet tank</a>.</p>
+<blockquote>
+<p>How does one send images over this?</p>
+</blockquote>
+<p>IRC is built for ANSI text; <a href="https://lib.rs/crates/img2irc-rs">you can turn images into ANSI</a>. A weechat script for this would be awesome, BTW.</p>
+<blockquote>
+<p>Which IRC network should I connect?</p>
+</blockquote>
+<p>DarkIRC is the best because it is decentralized and grants you unprecedented levels of privacy. Other networks run on central servers, but their communities may also be fun: have a look at <a href="https://liberta.casa/">liberta casa</a> or <a href="https://snoonet.org/">snoonet</a>.</p>
+<blockquote>
+<p>Where can one learn more about IRC?</p>
+</blockquote>
+<p>This <a href="https://github.com/davisonio/awesome-irc?tab=readme-ov-file#articles">awesome list</a> provides a good start.</p>
+<blockquote>
+<p>Wasn't WeeChat enough to be a Chad?</p>
+</blockquote>
 <p>WeeChat discourages direct editing of its configuration files and
 deploying them via dotfiles. Instead, settings should be configured at
 runtime, which provides immediate feedback on any deprecations or
-errors. This script facilitates that process by setting up everything
-in a self-contained directory, making it easier to secure, for
-example, by using encrypted folders.</p>
+errors. Chads have no time to set the same configurations over and
+over again on a dozen shells per day.</p>
+<h2 id="contribute-help-improve-the-base-conf">Contribute! <a href="https://github.com/dyne/weechad">help improve the base conf</a>.</h2>
 <hr />
 <div style="font-size:0.7em;">
 <p>WeeChad is maintained by <a href="https://github.com/dyne/Jaromil">jaromil</a>.</p>
