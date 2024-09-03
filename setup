@@ -78,7 +78,17 @@ main() {
   err "at last I'm generating your startup script in ~/weechad"
   cat <<EOF > ~/weechad
 #!/bin/sh
-WEECHAT_HOME=\$HOME/.weechad weechat
+if [ -r "\$HOME/weechad.tomb" -a -r "\$HOME/weechad.tomb.key" ]; then
+  tomb list 2>&1 | grep weechad
+  if [ "$?" = "1" ]; then
+    tomb open -f -k \$HOME/weechad.tomb.key \$HOME/weechad.tomb
+  fi
+  WEECHAT_HOME=\$HOME/.weechad weechat -r '/server list'
+  tomb close weechad
+else
+  WEECHAT_HOME=\$HOME/.weechad weechat -r '/server list'
+fi
+exit $?
 EOF
   chmod +x ~/weechad
   err "Done! enjoy being a Chad 🗿"
@@ -340,7 +350,7 @@ install-something() {
       done
       set -e
       local pp=`askpass`
-      $tomb dig -s 64   $HOME/weechad.tomb
+      $tomb dig -s 1024 $HOME/weechad.tomb
       $tomb forge --ignore-swap --unsafe \
             --tomb-pwd "$pp" -k $HOME/weechad.tomb.key
       $tomb lock --ignore-swap --unsafe --filesystem btrfs \
