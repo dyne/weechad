@@ -423,23 +423,27 @@
 others with its supreme focus on privacy and ease of use. Imagine a
 software so alpha, it sets up in a single folder, can connect to
 <a href="https://dark.fi">DarkIRC</a> and <a href="https://dyne.org/tomb">encrypts its settings and
-logs</a> for maximum privacy. No more messing
-around with dotfiles like a beta; WeeChad configures everything at
-runtime, giving you instant feedback on any deprecations or errors.</p>
-<p>With WeeChad, you’re not just chatting; you’re dominating the IRC
-scene with the confidence of a meme lord.</p>
+logs</a> for maximum privacy.</p>
+<p>No more messing around with dotfiles like a beta; WeeChad configures
+everything at runtime. With WeeChad, you’re not just chatting; you’re
+dominating the IRC scene with the confidence of a meme lord.</p>
 <h2 id="quick-start">Quick start</h2>
 <p>Install <a href="https://weechat.org">WeeChat</a> latest (version &gt;4.4)</p>
+<p>Type this command to install:</p>
 <div class="highlight"><pre><span></span><code>curl -Ls dyne.org/weechad/setup | NICK=yournick bash
 </code></pre></div>
 <p>Will create the <code>~/weechad</code> script and a new conf in <code>~/.weechad</code></p>
-<p>If you like copy the script by hand into <code>/usr/local/bin/weechad</code></p>
+<p>You may copy the script as root into <code>/usr/local/bin/weechad</code></p>
 <p>Comes pre-configured with <a href="https://news.dyne.org/howto_darkfi_1-connect_to_darkirc/">DarkIRC</a> (needs daemon running) and <a href="https://libera.chat">Libera</a>, just:
 <div class="highlight"><pre><span></span><code>/connect darkirc
 /connect libera
 </code></pre></div></p>
-<p>To increase privacy put the <code>~/.weechad</code> conf in a <a href="https://dyne.org/tomb">Tomb</a> and use <a href="https://dyne.org/docs/tomb/manpage/#hooks">bind-hooks</a>.</p>
-<p>For context, some useful links in the sidebar.</p>
+<p>To increase privacy put the <code>~/.weechad</code> conf in a <a href="https://dyne.org/tomb">Tomb</a> and use <a href="https://dyne.org/docs/tomb/manpage/#hooks">bind-hooks</a>. Encrypt it with:</p>
+<div class="highlight"><pre><span></span><code>curl -Ls dyne.org/weechad/setup | INSTALL=tomb bash
+</code></pre></div>
+<p>And you will have <code>weechad.tomb</code> and <code>weechad.tomb.key</code> in your
+home. When facing troubles, you are advised to store the key on a
+different support, like on a usb stick or a remote server.</p>
 <h2 id="faq">FAQ</h2>
 <blockquote>
 <p>What are the hardware requirements?</p>

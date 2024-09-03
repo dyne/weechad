@@ -23,6 +23,7 @@ configure() {
   pyscript colorize_nicks.py
   pyscript go.py
   pyscript collapse_channel.py
+  pyscript queryman.py
   plscript highmon.pl
   printf "\n"
   err "...done with plugins."
@@ -78,7 +79,15 @@ main() {
   err "at last I'm generating your startup script in ~/weechad"
   cat <<EOF > ~/weechad
 #!/bin/sh
-WEECHAT_HOME=\$HOME/.weechad weechat
+if [ -r "\$HOME/weechad.tomb" -a -r "\$HOME/weechad.tomb.key" ]; then
+  tomb list weechad 2>dev/null ||
+    tomb open -f -k \$HOME/weechad.tomb.key \$HOME/weechad.tomb
+  WEECHAT_HOME=\$HOME/.weechad weechat -r '/server list'
+  tomb close weechad
+else
+  WEECHAT_HOME=\$HOME/.weechad weechat -r '/server list'
+fi
+exit $?
 EOF
   chmod +x ~/weechad
   err "Done! enjoy being a Chad 🗿"
@@ -241,7 +250,7 @@ setup-server-conf() {
     server_conf="$server_conf;`printf '%s' "$line"`"
   done <<EOF
 # default servers
-/server add darkirc localhost/6667 -notls -autoconnect
+/server add darkirc localhost/6667                 -notls
 /server add 2f30      irc.2f30.org/6697              -tls
 /server add anope     irc.anope.org/6697             -tls
 /server add blackcatz irc.blackcatz.org/6697         -tls
@@ -256,6 +265,8 @@ setup-server-conf() {
 /server add ircstorm  irc.ircstorm.net/6699          -tls
 /server add malvager  irc.malvager.net/6697          -tls
 /server add oftc      irc.oftc.net/6697              -tls
+/server add snoonet   irc.snoonet.org/6697           -tls
+/server add casalib   irc.liberta.casa/6697          -tls
 /server add sandnet   irc.sandngz.net/6697           -tls
 /server add silph     irc.silph.co/6697              -tls
 /server add supernets irc.supernets.org/6697         -tls
@@ -338,10 +349,10 @@ install-something() {
       done
       set -e
       local pp=`askpass`
-      $tomb dig -s 64   $HOME/weechad.tomb
+      $tomb dig -s 1024 $HOME/weechad.tomb
       $tomb forge --ignore-swap --unsafe \
             --tomb-pwd "$pp" -k $HOME/weechad.tomb.key
-      $tomb lock --ignore-swap --unsafe \
+      $tomb lock --ignore-swap --unsafe --filesystem btrfs \
             --tomb-pwd "$pp" -k $HOME/weechad.tomb.key $HOME/weechad.tomb
       $tomb open --ignore-swap --unsafe \
             --tomb-pwd "$pp" -k $HOME/weechad.tomb.key $HOME/weechad.tomb
