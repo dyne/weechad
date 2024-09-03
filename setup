@@ -251,7 +251,7 @@ setup-server-conf() {
     server_conf="$server_conf;`printf '%s' "$line"`"
   done <<EOF
 # default servers
-/server add darkirc localhost/6667 -notls -autoconnect
+/server add darkirc localhost/6667                 -notls
 /server add 2f30      irc.2f30.org/6697              -tls
 /server add anope     irc.anope.org/6697             -tls
 /server add blackcatz irc.blackcatz.org/6697         -tls
