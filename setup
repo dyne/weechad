@@ -256,6 +256,8 @@ setup-server-conf() {
 /server add ircstorm  irc.ircstorm.net/6699          -tls
 /server add malvager  irc.malvager.net/6697          -tls
 /server add oftc      irc.oftc.net/6697              -tls
+/server add snoonet   irc.snoonet.org/6697           -tls
+/server add casalib   irc.liberta.casa/6697          -tls
 /server add sandnet   irc.sandngz.net/6697           -tls
 /server add silph     irc.silph.co/6697              -tls
 /server add supernets irc.supernets.org/6697         -tls
