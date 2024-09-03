@@ -343,7 +343,7 @@ install-something() {
       $tomb dig -s 64   $HOME/weechad.tomb
       $tomb forge --ignore-swap --unsafe \
             --tomb-pwd "$pp" -k $HOME/weechad.tomb.key
-      $tomb lock --ignore-swap --unsafe \
+      $tomb lock --ignore-swap --unsafe --filesystem btrfs \
             --tomb-pwd "$pp" -k $HOME/weechad.tomb.key $HOME/weechad.tomb
       $tomb open --ignore-swap --unsafe \
             --tomb-pwd "$pp" -k $HOME/weechad.tomb.key $HOME/weechad.tomb
