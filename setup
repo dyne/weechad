@@ -23,6 +23,7 @@ configure() {
   pyscript colorize_nicks.py
   pyscript go.py
   pyscript collapse_channel.py
+  pyscript queryman.py
   plscript highmon.pl
   printf "\n"
   err "...done with plugins."
