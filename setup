@@ -79,10 +79,8 @@ main() {
   cat <<EOF > ~/weechad
 #!/bin/sh
 if [ -r "\$HOME/weechad.tomb" -a -r "\$HOME/weechad.tomb.key" ]; then
-  tomb list 2>&1 | grep weechad
-  if [ "$?" = "1" ]; then
+  tomb list weechad 2>dev/null ||
     tomb open -f -k \$HOME/weechad.tomb.key \$HOME/weechad.tomb
-  fi
   WEECHAT_HOME=\$HOME/.weechad weechat -r '/server list'
   tomb close weechad
 else
