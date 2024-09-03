@@ -26,16 +26,17 @@ Welcome to the world of WeeChad, the IRC client that flexes on all
 others with its supreme focus on privacy and ease of use. Imagine a
 software so alpha, it sets up in a single folder, can connect to
 [DarkIRC](https://dark.fi) and [encrypts its settings and
-logs](https://dyne.org/tomb) for maximum privacy. No more messing
-around with dotfiles like a beta; WeeChad configures everything at
-runtime, giving you instant feedback on any deprecations or errors.
+logs](https://dyne.org/tomb) for maximum privacy.
 
-With WeeChad, you’re not just chatting; you’re dominating the IRC
-scene with the confidence of a meme lord.
+No more messing around with dotfiles like a beta; WeeChad configures
+everything at runtime. With WeeChad, you’re not just chatting; you’re
+dominating the IRC scene with the confidence of a meme lord.
 
 ## Quick start
 
 Install [WeeChat](https://weechat.org) latest (version >4.4)
+
+Type this command to install:
 
 ```
 curl -Ls dyne.org/weechad/setup | NICK=yournick bash
@@ -43,7 +44,7 @@ curl -Ls dyne.org/weechad/setup | NICK=yournick bash
 
 Will create the `~/weechad` script and a new conf in `~/.weechad`
 
-If you like copy the script by hand into `/usr/local/bin/weechad`
+You may copy the script as root into `/usr/local/bin/weechad`
 
 Comes pre-configured with [DarkIRC](https://news.dyne.org/howto_darkfi_1-connect_to_darkirc/) (needs daemon running) and [Libera](https://libera.chat), just:
 ```
@@ -51,9 +52,16 @@ Comes pre-configured with [DarkIRC](https://news.dyne.org/howto_darkfi_1-connect
 /connect libera
 ```
 
-To increase privacy put the `~/.weechad` conf in a [Tomb](https://dyne.org/tomb) and use [bind-hooks](https://dyne.org/docs/tomb/manpage/#hooks).
+To increase privacy put the `~/.weechad` conf in a [Tomb](https://dyne.org/tomb) and use [bind-hooks](https://dyne.org/docs/tomb/manpage/#hooks). Encrypt it with:
 
-For context, some useful links in the sidebar.
+```
+curl -Ls dyne.org/weechad/setup | INSTALL=tomb bash
+```
+
+And you will have `weechad.tomb` and `weechad.tomb.key` in your
+home. When facing troubles, you are advised to store the key on a
+different support, like on a usb stick or a remote server.
+
 
 ## FAQ
 
