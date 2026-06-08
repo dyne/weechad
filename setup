@@ -2,6 +2,7 @@
 
 # WeeChat configurator for Chads
 H=${HOME}/.weechad
+NICK=${NICK:-}
 nick_conf=""
 theme_conf=""
 script_conf=""
@@ -9,7 +10,7 @@ server_conf=""
 
 configure() {
   nick_conf=${nick_conf:-"/print skip nick configuration"}
-  mkdir -p $H
+  mkdir -p "$H"
 
   err "configuring WeeChad"
   setup-theme-conf
@@ -35,7 +36,7 @@ configure() {
               -r "$script_conf" \
               -r "$server_conf"  \
               -r "/save" -r "/quit"
-  chmod -R go-rwx ~/.weechad
+  chmod -R go-rwx "$H"
 }
 
 main() {
@@ -52,7 +53,7 @@ main() {
 
   ############
   # SETUP MAIN
-  [ -d $H/weechat.log ] && {
+  [ -d "$H/weechat.log" ] && {
     err "Cannot overwrite: $H"
     err "If you are really sure, delete and run again."
     exit 1
@@ -149,14 +150,14 @@ logo() {
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⡇⠀⣰⣿⣏⣀⣤⠴⠖⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 EOF
 }
-err() { >&2 printf "🗿 $*\n"; }
+err() { >&2 printf "🗿 %s\n" "$*"; }
 
 setup-nick-conf() {
   # running in terminal or through a pipe?
   if [ -t 0 ]; then
     if [ "$NICK" = "" ]; then
       err "Chose a nickname?"
-      read nick
+      read -r nick
     else
       nick="$NICK"
     fi
@@ -178,7 +179,7 @@ setup-theme-conf() {
   while IFS= read -r line; do
     [ "$line"      = ""  ] && continue
     [ "${line:0:1}" = "#" ] && continue
-    theme_conf="$theme_conf;`printf '%s' "$line"`"
+    theme_conf="$theme_conf;$line"
   done <<EOF
 # requires: 256 color terminal
 /set weechat.startup.display_logo off
@@ -222,9 +223,9 @@ setup-theme-conf() {
 /set irc.color.message_quit darkgray
 /set irc.color.reason_quit darkgray
 /set colorize_nicks.look.colorize_input on
-/trigger add url modifier weechat_print "${tg_tags} !~ irc_quit" ";[a-z]+://\S+;${color:228}${color:underline}${re:0}${color:reset};" ""
-/trigger add nick modifier weechat_print "${tg_tags} =~ irc_nick" ";is now known as;${color:darkgray}is now known as;" ""
-/trigger add disconnect modifier "weechat_print" "${tg_tags} !~ . && ${tg_buffer} !~ irc.server." ";irc: disconnected from server;${color:red}irc: disconnected from server;" ""
+/trigger add url modifier weechat_print "\${tg_tags} !~ irc_quit" ";[a-z]+://\S+;\${color:228}\${color:underline}\${re:0}\${color:reset};" ""
+/trigger add nick modifier weechat_print "\${tg_tags} =~ irc_nick" ";is now known as;\${color:darkgray}is now known as;" ""
+/trigger add disconnect modifier "weechat_print" "\${tg_tags} !~ . && \${tg_buffer} !~ irc.server." ";irc: disconnected from server;\${color:red}irc: disconnected from server;" ""
 EOF
 }
 
@@ -233,10 +234,10 @@ setup-script-conf() {
   while IFS= read -r line; do
     [ "$line"      = ""  ] && continue
     [ "${line:0:1}" = "#" ] && continue
-    script_conf="$script_conf;`printf '%s' "$line"`"
+    script_conf="$script_conf;$line"
   done <<EOF
-/autosort helpers set monitors_buffers_first ${if:${buffer.full_name}!~^core\.(chan|high|news)mon$}
-/autosort rules insert 3 ${monitors_buffers_first}
+/autosort helpers set monitors_buffers_first \${if:\${buffer.full_name}!~^core\.(chan|high|news)mon$}
+/autosort rules insert 3 \${monitors_buffers_first}
 /set plugins.var.python.cmd_help.color_delimiters "*white"
 /set plugins.var.python.cmd_help.color_arguments "121"
 /set plugins.var.python.cmd_help.color_list "121"
@@ -254,7 +255,7 @@ setup-server-conf() {
   while IFS= read -r line; do
     [ "$line"      = ""  ] && continue
     [ "${line:0:1}" = "#" ] && continue
-    server_conf="$server_conf;`printf '%s' "$line"`"
+    server_conf="$server_conf;$line"
   done <<EOF
 # default servers
 /server add darkirc localhost/6667                 -notls
@@ -288,16 +289,16 @@ EOF
 
 pyscript() {
   printf " %s" "$1"
-  mkdir -p $H/python $H/python/autoload
-  curl -Ls https://weechat.org/files/scripts/${1} > $H/python/${1}
-  ln -sf $H/python/${1} $H/python/autoload/${1}
+  mkdir -p "$H/python" "$H/python/autoload"
+  curl -Ls "https://weechat.org/files/scripts/${1}" > "$H/python/${1}"
+  ln -sf "$H/python/${1}" "$H/python/autoload/${1}"
   #scripts="$scripts;/script load ${1};/script autoload ${1}"
 }
 plscript() {
   printf " %s" "$1"
-  mkdir -p $H/perl $H/perl/autoload
-  curl -Ls https://weechat.org/files/scripts/${1} > $H/perl/${1}
-  ln -sf $H/perl/${1} $H/perl/autoload/${1}
+  mkdir -p "$H/perl" "$H/perl/autoload"
+  curl -Ls "https://weechat.org/files/scripts/${1}" > "$H/perl/${1}"
+  ln -sf "$H/perl/${1}" "$H/perl/autoload/${1}"
   #scripts="$scripts;/script load ${1};/script autoload ${1}"
 }
 
@@ -343,29 +344,31 @@ install-something() {
         exit 1; }
       local tombver=2.11
       local tomb=""
+      local ttmp
+      local pp
       while true; do # install tomb if missing
         [ -x /usr/bin/tomb ] && { tomb="/usr/bin/tomb"; break; }
         [ -x /usr/local/bin/tomb ] && { tomb="/usr/local/bin/tomb"; break; }
-	      err "install Tomb from latest source"
-        ttmp=`mktemp`
-		    curl -Ls https://files.dyne.org/tomb/Tomb-${tombver}.tar.gz \
-             > /tmp/"$ttmp".tar.gz
-        tar xf /tmp/"$ttmp".tar.gz -O "Tomb-${tombver}/tomb" > "$HOME/tomb"
+        err "install Tomb from latest source"
+        ttmp=$(mktemp)
+        curl -Ls "https://files.dyne.org/tomb/Tomb-${tombver}.tar.gz" \
+             > "${ttmp}.tar.gz"
+        tar xf "${ttmp}.tar.gz" -O "Tomb-${tombver}/tomb" > "$HOME/tomb"
         tomb="$HOME/tomb"
         break
       done
       set -e
-      local pp=`askpass`
-      $tomb dig -s 1024 $HOME/weechad.tomb
-      $tomb forge --ignore-swap --unsafe \
-            --tomb-pwd "$pp" -k $HOME/weechad.tomb.key
-      $tomb lock --ignore-swap --unsafe --filesystem btrfs \
-            --tomb-pwd "$pp" -k $HOME/weechad.tomb.key $HOME/weechad.tomb
-      $tomb open --ignore-swap --unsafe \
-            --tomb-pwd "$pp" -k $HOME/weechad.tomb.key $HOME/weechad.tomb
-      mv $H /media/weechad/weechad && mkdir -p $H
+      pp=$(askpass)
+      "$tomb" dig -s 1024 "$HOME/weechad.tomb"
+      "$tomb" forge --ignore-swap --unsafe \
+            --tomb-pwd "$pp" -k "$HOME/weechad.tomb.key"
+      "$tomb" lock --ignore-swap --unsafe --filesystem btrfs \
+            --tomb-pwd "$pp" -k "$HOME/weechad.tomb.key" "$HOME/weechad.tomb"
+      "$tomb" open --ignore-swap --unsafe \
+            --tomb-pwd "$pp" -k "$HOME/weechad.tomb.key" "$HOME/weechad.tomb"
+      mv "$H" /media/weechad/weechad && mkdir -p "$H"
       printf "weechad .weechad\n" > /media/weechad/bind-hooks
-      $tomb close weechad
+      "$tomb" close weechad
       set +e
       err "Tomb setup complete! now you can:"
       err "$tomb open -k \$HOME/weechad.tomb.key \$HOME/weechad.tomb"
