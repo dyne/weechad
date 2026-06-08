@@ -63,9 +63,8 @@ main() {
     exit 1
   }
 
-  # TODO: better version checking
-  wcver=`weechat -v`
-  echo ${wcver} | grep 4.4.. >/dev/null || {
+  wcver=$(weechat -v)
+  weechat-version-supported "$wcver" || {
     err "WeeChat installed is old: ${wcver}"
     err "Install from: https://weechat.org/download/weechat/stable"
     exit 1
@@ -97,6 +96,14 @@ EOF
 
   ## END OF MAIN
   ##############
+}
+
+weechat-version-supported() {
+  local version="$1"
+
+  [[ "$version" =~ ^([0-9]+)\.([0-9]+)(\.|$) ]] || return 1
+  ((10#${BASH_REMATCH[1]} > 4 ||
+    (10#${BASH_REMATCH[1]} == 4 && 10#${BASH_REMATCH[2]} >= 4)))
 }
 
 logo() {
