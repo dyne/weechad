@@ -2,13 +2,14 @@
 
 ## Project Structure & Module Organization
 
-WeeChad is a small Bash-based configurator with a documentation site.
+WeeChad is a small Bash-based configurator with a VitePress documentation site.
 
 - `setup`: main executable installer and WeeChat configuration source.
-- `GNUmakefile`: ShellCheck and MkDocs development targets.
+- `GNUmakefile`: ShellCheck and VitePress development targets.
 - `README.md`: user-facing introduction, installation guide, and FAQ.
-- `mkdocs.yml`: Material for MkDocs site configuration.
-- `docs/images/` and `docs/stylesheets/`: documentation assets and custom CSS.
+- `docs/.vitepress/`: site configuration and the Dyne-branded theme.
+- `docs/*.md`: user guides and project documentation.
+- `docs/public/`: static documentation assets.
 - `LICENSE.txt`: project license.
 
 Keep runtime behavior in `setup`; do not split it into extra modules unless that
@@ -18,10 +19,9 @@ clearly reduces complexity. Keep documentation assets under `docs/`.
 
 - `make check`: run ShellCheck against `setup`. Run this after every shell
   change.
-- `make deps`: create a repository-local Python virtual environment and install
-  the MkDocs dependencies.
+- `make deps`: install the VitePress dependencies under `docs/`.
+- `make docs`: build the production documentation site.
 - `make preview`: serve the documentation locally with live reload.
-- `make deploy`: publish the documentation through `mkdocs gh-deploy`.
 - `NICK=tester bash setup`: exercise the installer locally. This writes to
   `~/.weechad` and `~/weechad`, so use a disposable `HOME` when testing.
 
@@ -51,7 +51,8 @@ HOME="$tmp_home" NICK=tester bash setup
 
 Installer tests require WeeChat and may download scripts. Verify generated
 configuration, permissions, and failure paths without touching real user data.
-For documentation changes, inspect the site with `make preview`.
+For documentation changes, run `make docs` and inspect the site with
+`make preview` when visual behavior changes.
 
 ## Commit & Pull Request Guidelines
 

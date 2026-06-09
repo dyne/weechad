@@ -1,14 +1,13 @@
-.PHONY: docs deps
+.PHONY: check docs deps preview
 
 check:
 	shellcheck setup
 
-preview: deps
-	. bin/activate && mkdocs serve
-
-deploy: deps
-	. bin/activate && mkdocs gh-deploy
-
 deps:
-	python3 -m venv .
-	./bin/pip install mkdocs-material cairosvg pil-utils
+	npm --prefix docs install
+
+docs: deps
+	npm --prefix docs run build
+
+preview: deps
+	npm --prefix docs run dev
