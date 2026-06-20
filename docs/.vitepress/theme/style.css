@@ -173,6 +173,10 @@ html {
   object-fit: contain;
 }
 
+.dark .VPHomeHero .image-src {
+  filter: invert(1);
+}
+
 .VPHomeHero .tagline {
   max-width: 42rem;
 }
